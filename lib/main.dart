@@ -18,11 +18,10 @@ class MyApp extends StatelessWidget {
       title: 'Eletropostos App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.grey[200],
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomeScreen(),
     );
   }
 }
+
 

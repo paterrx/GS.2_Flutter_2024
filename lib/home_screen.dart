@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2)); // Simula atraso
       final apiService = ApiService();
       final data = await apiService.fetchEletropostos();
       setState(() {
@@ -46,23 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Eletropostos Próximos"),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.blueAccent,
       ),
       body: _isLoading
           ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(
-                    color: Colors.blueAccent,
-                  ),
+                  CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text(
-                    "Carregando, por favor aguarde...",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
+                  Text("Carregando dados..."),
                 ],
               ),
             )
@@ -73,75 +65,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.error_outline, color: Colors.red, size: 48),
+                        const Icon(Icons.error, color: Colors.red, size: 40),
                         const SizedBox(height: 16),
                         Text(
                           _errorMessage,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                          ),
+                          style: const TextStyle(fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 20),
-                        ElevatedButton.icon(
+                        const SizedBox(height: 16),
+                        ElevatedButton(
                           onPressed: _fetchEletropostos,
-                          icon: const Icon(Icons.refresh),
-                          label: const Text("Tentar Novamente"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                            foregroundColor: Colors.white,
-                          ),
+                          child: const Text("Tentar novamente"),
                         ),
                       ],
                     ),
                   ),
                 )
               : ListView.builder(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(8),
                   itemCount: _eletropostos.length,
                   itemBuilder: (context, index) {
                     final eletroposto = _eletropostos[index];
                     return Card(
-                      elevation: 4,
                       margin: const EdgeInsets.symmetric(vertical: 8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
+                      child: ListTile(
+                        title: Text(eletroposto['nome'] ?? "Nome não disponível"),
+                        subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              eletroposto['nome'] ?? "Nome não disponível",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "Endereço: ${eletroposto['endereco'] ?? 'Não disponível'}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            Text(
-                              "Telefone: ${eletroposto['telefone'] ?? 'Não disponível'}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            Text(
-                              "Conectores: ${(eletroposto['conectores'] as List<dynamic>?)?.join(', ') ?? 'Não disponível'}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black54,
-                              ),
-                            ),
+                            Text("Endereço: ${eletroposto['endereco'] ?? 'Não disponível'}"),
+                            Text("Telefone: ${eletroposto['telefone'] ?? 'Não disponível'}"),
+                            Text("Conectores: ${(eletroposto['conectores'] as List<dynamic>?)?.join(', ') ?? 'Não disponível'}"),
                           ],
                         ),
+                        isThreeLine: true,
                       ),
                     );
                   },
